@@ -37,6 +37,7 @@ public class MultiContactPickerActivity extends AppCompatActivity implements Mat
     private List<Contact> contactList = new ArrayList<>();
     private TextView tvSelectAll;
     private TextView tvSelectBtn;
+    private TextView tvNoContacts;
     private LinearLayout controlPanel;
     private MultiContactPickerAdapter adapter;
     private Toolbar toolbar;
@@ -65,6 +66,7 @@ public class MultiContactPickerActivity extends AppCompatActivity implements Mat
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         tvSelectAll = (TextView) findViewById(R.id.tvSelectAll);
         tvSelectBtn = (TextView) findViewById(R.id.tvSelect);
+        tvNoContacts = (TextView) findViewById(R.id.tvNoContacts);
         recyclerView = (FastScrollRecyclerView) findViewById(R.id.recyclerView);
 
         initialiseUI(builder);
@@ -142,6 +144,20 @@ public class MultiContactPickerActivity extends AppCompatActivity implements Mat
         }else{
             controlPanel.setVisibility(View.VISIBLE);
         }
+        
+        if (builder.titleText != null) {
+            setTitle(builder.titleText);
+        }
+        
+        
+        if (builder.completionText != null) {
+            tvSelectBtn.setText(builder.completionText);
+        }
+        
+        
+        if (builder.selectionText != null) {
+            tvSelectAll.setText(builder.selectionText);
+        }
     }
 
     @Override
@@ -195,6 +211,8 @@ public class MultiContactPickerActivity extends AppCompatActivity implements Mat
 
                     @Override
                     public void onComplete() {
+                        if (contactList.size() == 0) { tvNoContacts.setVisibility(View.VISIBLE); }
+                        progressBar.setVisibility(View.GONE);
                         tvSelectAll.setEnabled(true);
                     }
                 });
