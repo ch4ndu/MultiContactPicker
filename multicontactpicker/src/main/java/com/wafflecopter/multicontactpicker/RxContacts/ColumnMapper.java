@@ -16,8 +16,10 @@ package com.wafflecopter.multicontactpicker.RxContacts;
  * limitations under the License.
  */
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 
 class ColumnMapper {
 
@@ -42,12 +44,15 @@ class ColumnMapper {
         }
     }
 
-    static void mapPhoneNumber (Cursor cursor, Contact contact, int columnIndex) {
-        String phoneNumber = cursor.getString(columnIndex);
+    static void mapPhoneNumber (Context con, Cursor cursor, Contact contact, int noColumnIndex, int typeColIndex, int labelColIndex) {
+        String phoneNumber = cursor.getString(noColumnIndex);
+        int phonetype = cursor.getInt(typeColIndex);
+        String customLabel = cursor.getString(labelColIndex);
+        String phoneLabel = (String) ContactsContract.CommonDataKinds.Phone.getTypeLabel(con.getResources(), phonetype, customLabel);
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             // Remove all whitespaces
             phoneNumber = phoneNumber.replaceAll("\\s+","");
-            contact.getPhoneNumbers().add(phoneNumber);
+            contact.getPhoneNumbers().add(new PhoneNumber(phoneLabel, phoneNumber.trim()));
         }
     }
 
